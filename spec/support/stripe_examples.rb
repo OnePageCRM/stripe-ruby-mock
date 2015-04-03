@@ -11,6 +11,7 @@ def it_behaves_like_stripe(&block)
   it_behaves_like 'Charge API', &block
   it_behaves_like 'Coupon API', &block
   it_behaves_like 'Customer API', &block
+  it_behaves_like 'Discount API', &block
   it_behaves_like 'Extra Features', &block
   it_behaves_like 'Invoice API', &block
   it_behaves_like 'Invoice Item API', &block

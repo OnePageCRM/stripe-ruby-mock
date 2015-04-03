@@ -24,6 +24,7 @@ module StripeMock
     include StripeMock::RequestHandlers::Subscriptions # must be before Customers
     include StripeMock::RequestHandlers::Customers
     include StripeMock::RequestHandlers::Coupons
+    include StripeMock::RequestHandlers::Discounts
     include StripeMock::RequestHandlers::Events
     include StripeMock::RequestHandlers::Invoices
     include StripeMock::RequestHandlers::InvoiceItems
