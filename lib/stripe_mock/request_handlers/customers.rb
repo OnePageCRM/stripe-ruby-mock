@@ -21,6 +21,11 @@ module StripeMock
 
         customers[ params[:id] ] = Data.mock_customer(sources, params)
 
+        if params[:coupon]
+          coupon = assert_existence :coupon, params[:coupon], coupons[params[:coupon]]
+          customers[ params[:id] ].merge! discount: apply_coupon_to_customer(customers[ params[:id] ], coupon)
+        end
+
         if params[:plan]
           plan_id = params[:plan].to_s
           plan = assert_existence :plan, plan_id, plans[plan_id]
@@ -48,6 +53,11 @@ module StripeMock
           new_card = get_card_by_token(params.delete(:source))
           add_card_to_object(:customer, new_card, cus, true)
           cus[:default_source] = new_card[:id]
+        end
+
+        if params[:coupon]
+          coupon = assert_existence :coupon, params[:coupon], coupons[params[:coupon]]
+          cus.merge! discount: apply_coupon_to_customer(cus, coupon)
         end
 
         cus
