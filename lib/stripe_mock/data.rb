@@ -163,6 +163,18 @@ module StripeMock
       }.merge(params)
     end
 
+    def self.mock_discount(params={})
+      {
+       :coupon => {},
+       :start => 1308595038,
+       :end => nil,
+       :object => 'discount',
+       :customer => nil,
+       :subscription => nil,
+       :id => 'di_test_id'
+      }.merge(params)
+    end
+
     #FIXME nested overrides would be better than hardcoding plan_id
     def self.mock_subscription(params={})
       StripeMock::Util.rmerge({
