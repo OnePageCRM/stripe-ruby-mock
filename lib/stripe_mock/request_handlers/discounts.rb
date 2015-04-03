@@ -3,75 +3,40 @@ module StripeMock
     module Discounts
 
       def Discounts.included(klass)
-        klass.add_handler 'post /v1/customers',                     :new_customer
-        klass.add_handler 'post /v1/customers/(.*)',                :update_customer
-        klass.add_handler 'get /v1/customers/(.*)',                 :get_customer
-        klass.add_handler 'delete /v1/customers/(.*)',              :delete_customer
-        klass.add_handler 'get /v1/customers',                      :list_customers
+        klass.add_handler 'post /v1/customers/(.*)/discount', :delete_customer_discount
+        klass.add_handler 'delete /v1/customers/(.*)/subscriptions/(.*)/discount', :delete_subscription_discount
       end
 
-      def new_customer(route, method_url, params, headers)
-        params[:id] ||= new_id('cus')
-        sources = []
-
-        if params[:source]
-          sources << get_card_by_token(params.delete(:source))
-          params[:default_source] = sources.first[:id]
-        end
-
-        customers[ params[:id] ] = Data.mock_customer(sources, params)
-
-        if params[:plan]
-          plan_id = params[:plan].to_s
-          plan = assert_existence :plan, plan_id, plans[plan_id]
-
-          if params[:default_source].nil? && plan[:trial_period_days].nil? && plan[:amount] != 0
-            raise Stripe::InvalidRequestError.new('You must supply a valid card', nil, 400)
-          end
-
-          subscription = Data.mock_subscription({ id: new_id('su') })
-          subscription.merge!(custom_subscription_params(plan, customers[ params[:id] ], params))
-          add_subscription_to_customer(customers[ params[:id] ], subscription)
-        elsif params[:trial_end]
-          raise Stripe::InvalidRequestError.new('Received unknown parameter: trial_end', nil, 400)
-        end
-
-        customers[ params[:id] ]
-      end
-
-      def update_customer(route, method_url, params, headers)
+      def delete_customer_discount(route, method_url, params, headers)
         route =~ method_url
-        cus = assert_existence :customer, $1, customers[$1]
-        cus.merge!(params)
+        customer = assert_existence :customer, $1, customers[$1]
 
-        if params[:source]
-          new_card = get_card_by_token(params.delete(:source))
-          add_card_to_object(:customer, new_card, cus, true)
-          cus[:default_source] = new_card[:id]
-        end
+        discount = get_customer_discount(customer)
+        id = discount[:id]
+        assert_existence :discount, id, discount
 
-        cus
-      end
-
-      def delete_customer(route, method_url, params, headers)
-        route =~ method_url
-        assert_existence :customer, $1, customers[$1]
-
-        customers[$1] = {
-          id: customers[$1][:id],
+        discounts[$1] = {
+          id: id,
           deleted: true
         }
       end
 
-      def get_customer(route, method_url, params, headers)
+      def delete_subscription_discount(route, method_url, params, headers)
         route =~ method_url
-        assert_existence :customer, $1, customers[$1]
-      end
+        customer = assert_existence :customer, $1, customers[$1]
 
-      def list_customers(route, method_url, params, headers)
-        Data.mock_list_object(customers.values, params)
-      end
+        subscription = get_customer_subscription(customer, $2)
+        assert_existence :subscription, $2, subscription
 
+        discount = get_subscription_discount(subscription)
+        id = discount[:id]
+        assert_existence :discount, id, discount
+
+        discounts[$1] = {
+          id: id,
+          deleted: true
+        }
+      end
     end
   end
 end

@@ -34,7 +34,7 @@ module StripeMock
     include StripeMock::RequestHandlers::Tokens
 
 
-    attr_reader :bank_tokens, :charges, :coupons, :customers, :events,
+    attr_reader :bank_tokens, :charges, :coupons, :customers, :discounts, :events,
                 :invoices, :invoice_items, :plans, :recipients, :transfers, :subscriptions
 
     attr_accessor :error_queue, :debug
@@ -45,6 +45,7 @@ module StripeMock
       @customers = {}
       @charges = {}
       @coupons = {}
+      @discounts = {}
       @events = {}
       @invoices = {}
       @invoice_items = {}

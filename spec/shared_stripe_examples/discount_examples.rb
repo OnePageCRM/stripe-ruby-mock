@@ -6,7 +6,7 @@ shared_examples 'Discount API' do
     stripe_helper.generate_card_token
   end
 
-  it "creates a stripe customer with a default card" do
+  it "creates a stripe discount object" do
     customer = Stripe::Customer.create({
       email: 'johnny@appleseed.com',
       source: gen_card_tk,
