@@ -15,6 +15,7 @@ module StripeMock
         id = discount[:id]
         assert_existence :discount, id, discount
 
+        customer[:discount] = nil
         discounts[$1] = {
           id: id,
           deleted: true
@@ -32,6 +33,7 @@ module StripeMock
         id = discount[:id]
         assert_existence :discount, id, discount
 
+        subscription[:discount] = nil
         discounts[$1] = {
           id: id,
           deleted: true
