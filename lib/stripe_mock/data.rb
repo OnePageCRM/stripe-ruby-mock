@@ -188,6 +188,7 @@ module StripeMock
           :object => "plan",
           :id => '__test_plan_id__'
         },
+        :discount => nil,
         :cancel_at_period_end => false,
         :canceled_at => nil,
         :ended_at => nil,

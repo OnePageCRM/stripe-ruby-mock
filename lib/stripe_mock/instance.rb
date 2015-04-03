@@ -21,10 +21,10 @@ module StripeMock
     include StripeMock::RequestHandlers::Charges
     include StripeMock::RequestHandlers::Cards
     include StripeMock::RequestHandlers::Sources
+    include StripeMock::RequestHandlers::Discounts # Need to match discount urls before subscription or customer urls
     include StripeMock::RequestHandlers::Subscriptions # must be before Customers
     include StripeMock::RequestHandlers::Customers
     include StripeMock::RequestHandlers::Coupons
-    include StripeMock::RequestHandlers::Discounts
     include StripeMock::RequestHandlers::Events
     include StripeMock::RequestHandlers::Invoices
     include StripeMock::RequestHandlers::InvoiceItems

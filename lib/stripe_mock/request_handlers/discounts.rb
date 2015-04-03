@@ -3,8 +3,8 @@ module StripeMock
     module Discounts
 
       def Discounts.included(klass)
-        klass.add_handler 'post /v1/customers/(.*)/discount', :delete_customer_discount
         klass.add_handler 'delete /v1/customers/(.*)/subscriptions/(.*)/discount', :delete_subscription_discount
+        klass.add_handler 'delete /v1/customers/(.*)/discount', :delete_customer_discount
       end
 
       def delete_customer_discount(route, method_url, params, headers)
@@ -16,7 +16,7 @@ module StripeMock
         assert_existence :discount, id, discount
 
         customer[:discount] = nil
-        discounts[$1] = {
+        discounts[id] = {
           id: id,
           deleted: true
         }
@@ -34,7 +34,7 @@ module StripeMock
         assert_existence :discount, id, discount
 
         subscription[:discount] = nil
-        discounts[$1] = {
+        discounts[id] = {
           id: id,
           deleted: true
         }

@@ -19,7 +19,7 @@ module StripeMock
       end
 
       def get_subscription_discount(subscription)
-        customer[:subscription]
+        subscription[:discount]
       end
     end
   end
